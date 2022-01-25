@@ -1,8 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { of } from 'rxjs';
+import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 
 describe('AppComponent', () => {
+  const authStateSpy = jasmine.createSpyObj('OktaAuthStateService', [], {
+    authState$: of({
+      isAuthenticated: false
+    })
+  });
+
+  const authSpy = jasmine.createSpyObj('OktaAuth', ['login']);
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -11,6 +21,10 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      providers: [
+        { provide: OktaAuthStateService, useValue: authStateSpy },
+        { provide: OKTA_AUTH, useValue: authSpy }
+      ]
     }).compileComponents();
   });
 
@@ -24,12 +38,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('okta-angular-quickstart');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('okta-angular-quickstart app is running!');
   });
 });

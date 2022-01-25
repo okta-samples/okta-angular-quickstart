@@ -1,27 +1,84 @@
-# OktaAngularQuickstart
+# Angular Quickstart Sample Code for Integrating with Okta using the Redirect Model
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.4.
+This repository contains a sample of integrating with [Okta](https://www.okta.com/) for authentication using [the redirect model in an Angular app](https://developer.okta.com/docs/guides/sign-into-spa/angular/main/).
 
-## Development server
+The sample uses the [Okta Angular SDK](https://github.com/okta/okta-angular) and [Okta Auth JavaScript SDK](https://github.com/okta/okta-auth-js). Read more about getting started with Okta and authentication best practices on the [Okta Developer Portal](https://developer.okta.com).
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+This code sample demonstrates
+* Configuring Okta
+* Sign-in and sign-out
+* Protecting routes
+* Displaying user profile information from the ID Token
+* Adding an interceptor for adding the Access Token to HTTP calls
 
-## Code scaffolding
+## Getting started
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+To run this example, run the following commands:
 
-## Build
+```shell
+git clone https://github.com/oktadev/okta-angular-quickstart.git
+cd okta-angular-quickstart
+npm ci
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Create an OIDC application in Okta
 
-## Running unit tests
+Create a free developer account with the following command using the [Okta CLI](https://cli.okta.com/):
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```shell
+okta register
+```
 
-## Running end-to-end tests
+If you already have a developer account, use `okta login` to integrate it with the Okta CLI.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Provide the required information. Once you register, create a client application in Okta with the following command:
 
-## Further help
+```shell
+okta apps create
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+You will be prompted to select the following options:
+* Type of Application: **2: SPA**
+* Redirect URI: `http://localhost:4200/login/callback`
+* Logout Redirect URI: `http://localhost:4200`
+
+The application configuration will be printed to your screen:
+
+```
+Okta application configuration:
+Issuer:    https://<OKTA_DOMAIN>.okta.com/oauth2/default
+Client ID: <CLIENT_ID>
+```
+
+Update src/app/app.module.ts with your Okta settings.
+
+```ts
+const oktaAuth = new OktaAuth({
+  clientId: '{yourClientID}',
+  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  redirectUri: window.location.origin + '/login/callback'
+});
+```
+
+Start the app by running
+
+```shell
+npm start
+```
+
+Spec files have been updated to demonstrate how to configure the `TestBed` and provide a spy in place of Okta services.
+
+Run tests by
+
+```shell
+npm run test
+```
+
+## Helpful resources
+* [Learn about Authentication, OAuth 2.0, and OpenID Connect](https://developer.okta.com/docs/concepts/)
+* [Get started with Angular](https://angular.io/start)
+* [Angular developer guide](https://angular.io/guide/developer-guide-overview)
+
+## Help
+
+Please visit our [Okta Developer Forums](https://devforum.okta.com/).
