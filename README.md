@@ -16,7 +16,7 @@ This code sample demonstrates
 To run this example, run the following commands:
 
 ```shell
-git clone https://github.com/oktadev/okta-angular-quickstart.git
+git clone https://github.com/okta-samples/okta-angular-quickstart.git
 cd okta-angular-quickstart
 npm ci
 ```
