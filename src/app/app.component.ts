@@ -23,9 +23,7 @@ export class AppComponent implements OnInit {
   }
 
   public async signIn() : Promise<void> {
-    await this._oktaAuth.signInWithRedirect().then(
-      _ => this._router.navigate(['/profile'])
-    );
+    await this._oktaAuth.signInWithRedirect();
   }
 
   public async signOut(): Promise<void> {
