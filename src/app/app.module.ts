@@ -1,7 +1,7 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { OktaAuthModule, OKTA_CONFIG } from '@okta/okta-angular';
+import { OktaAuthModule } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -23,11 +23,10 @@ const oktaAuth = new OktaAuth({
   imports: [
     BrowserModule,
     AppRoutingModule,
-    OktaAuthModule,
+    OktaAuthModule.forRoot({ oktaAuth }),
     HttpClientModule
   ],
   providers: [
-    { provide: OKTA_CONFIG, useValue: { oktaAuth } },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
