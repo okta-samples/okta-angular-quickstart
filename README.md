@@ -50,13 +50,16 @@ Issuer:    https://<OKTA_DOMAIN>.okta.com/oauth2/default
 Client ID: <CLIENT_ID>
 ```
 
+Sign into your [Okta Developer Edition account](https://developer.okta.com/login/) to add a required setting to your SPA Okta app to avoid third-party cookies. Navigate to **Applications** > **Applications** and select "My SPA" application to edit. Find the **General Settings** and press **Edit**. Enable **Refresh Token** in the **Grant type** section. **Save** your changes.
+
 Update src/app/app.module.ts with your Okta settings.
 
 ```ts
 const oktaAuth = new OktaAuth({
   clientId: '{yourClientID}',
   issuer: 'https://{yourOktaDomain}/oauth2/default',
-  redirectUri: window.location.origin + '/login/callback'
+  redirectUri: window.location.origin + '/login/callback',
+  scopes: ['openid', 'offline_access']
 });
 ```
 
