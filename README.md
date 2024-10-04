@@ -59,7 +59,7 @@ const oktaAuth = new OktaAuth({
   clientId: '{yourClientID}',
   issuer: 'https://{yourOktaDomain}/oauth2/default',
   redirectUri: window.location.origin + '/login/callback',
-  scopes: ['openid', 'offline_access']
+  scopes: ['openid', 'profile', 'offline_access']
 });
 ```
 
