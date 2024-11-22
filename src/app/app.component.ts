@@ -1,10 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
 import { AuthState, OktaAuth } from '@okta/okta-auth-js';
 import { filter, map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterOutlet, AsyncPipe, RouterLink],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

@@ -11,14 +11,11 @@ describe('AppComponent', () => {
     })
   });
 
-  const authSpy = jasmine.createSpyObj('OktaAuth', ['login']);
+  const authSpy = jasmine.createSpyObj('OktaAuth', ['signInWithRedirect']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
-      ],
-      declarations: [
         AppComponent
       ],
       providers: [
@@ -33,10 +30,12 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
-  it(`should have as title 'okta-angular-quickstart'`, () => {
+  
+  it(`should call Okta's login method in the sign in method`, async () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('okta-angular-quickstart');
-  });
+    await app.signIn().then(() => {
+      expect(authSpy.signInWithRedirect).toHaveBeenCalled();
+    });
+  })
 });
