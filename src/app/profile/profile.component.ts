@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { OktaAuthStateService } from '@okta/okta-angular';
-import { filter, map, Observable } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AuthState } from '@okta/okta-auth-js';
 import { AsyncPipe } from '@angular/common';
 
@@ -21,7 +21,7 @@ import { AsyncPipe } from '@angular/common';
 })
 export class ProfileComponent {
   private oktaAuthStateService = inject(OktaAuthStateService);
-  
+
   public name$ = this.oktaAuthStateService.authState$.pipe(
     filter((authState: AuthState) => !!authState && !!authState.isAuthenticated),
     map((authState: AuthState) => authState.idToken?.claims.name ?? '')

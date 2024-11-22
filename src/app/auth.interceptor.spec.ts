@@ -1,10 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { OktaAuth } from '@okta/okta-auth-js';
 
 import { authInterceptor } from './auth.interceptor';
-import { HttpClient, HttpEvent, HttpHandler, HttpRequest, HTTP_INTERCEPTORS, HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { OKTA_AUTH } from '@okta/okta-angular';
 
 describe('AuthInterceptor', () => {

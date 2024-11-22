@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { of } from 'rxjs';
 import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
@@ -30,7 +29,7 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-  
+
   it(`should call Okta's login method in the sign in method`, async () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
