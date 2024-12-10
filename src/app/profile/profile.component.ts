@@ -10,9 +10,9 @@ import { AsyncPipe } from '@angular/common';
   template: `
   <div class="profile-card">
     <div class="shield"></div>
-    <p>You're logged in!
+    <p>Welcome
       @if(name$ | async; as name) {
-        <span>Welcome, {{name}} </span>
+        <span>{{name}} </span>
       }
     </p>
   </div>
