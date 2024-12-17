@@ -8,7 +8,7 @@ import { OktaAuthModule } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 
 const oktaAuth = new OktaAuth({
-  issuer: 'https://{yourOktaDomain}/oauth2/default',
+  issuer: 'https://{yourOktaDomain}',
   clientId: '{yourClientID}',
   redirectUri: window.location.origin + '/login/callback',
   scopes: ['openid', 'profile', 'offline_access']
