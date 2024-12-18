@@ -1,127 +1,3 @@
-<style>
-  :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  h2 {
-    margin: 24px 0;
-  }
-
-  p {
-    margin: 0;
-  }
-
-  .toolbar {
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    color: #41414b;
-    font-weight: 600;
-  }
-
-  .toolbar img {
-    margin: 0 16px;
-  }
-
-  .content {
-    display: flex;
-    margin: 32px auto;
-    padding: 0 16px;
-    max-width: 960px;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  svg.material-icons {
-    height: 24px;
-    width: auto;
-  }
-
-  svg.material-icons:not(:last-child) {
-    margin-right: 8px;
-  }
-
-  .card svg.material-icons path {
-    fill: #aaaab4;
-  }
-
-  .card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 16px;
-  }
-
-  .card {
-    all: unset;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-  }
-
-  .card-container .card:not(:last-child) {
-    margin-right: 0;
-  }
-
-  .card.card-small {
-    height: 20px;
-    width: 100px;
-    margin: 0 8px 16px 20px;
-    padding: 8px;
-  }
-
-  .card.card-resource {
-    height: 40px;
-    width: 200px;
-    margin: 0 8px 16px;
-    padding: 16px;
-    line-height: 24px;
-  }
-
-  .card-container .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
-  }
-
-  .card-container .card:hover .material-icons path {
-    fill: rgb(105, 103, 103);
-  }
-
-  a,
-  a:visited,
-  a:hover {
-    color: #095661;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: #2d8c9e;
-  }
-
-  nav.routes > a + a {
-    margin-left: 1rem;
-  }
-
-  .routes {
-    display: flex;
-    align-items: top;
-    text-decoration: underline;
-  }
-</style>
-
-<!-- Toolbar -->
 <div class="toolbar" role="banner">
   <img
     width="75"
@@ -130,14 +6,7 @@
   />
 
   <div class="card-container">
-    <ng-container *ngIf="(isAuthenticated$ | async) === false; else signout">
-      <a class="card card-small" (click)="signIn()">
-        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></svg>
-        <span>Sign in</span>
-      </a>
-    </ng-container>
-
-    <ng-template #signout>
+    @if (isAuthenticated$ | async) {
       <div class="card-container">
         <nav class="routes">
           <a routerLink="/">Home</a>
@@ -145,11 +14,16 @@
           <a routerLink="/protected">Protected</a>
         </nav>
       </div>
-        <a class="card card-small" (click)="signOut()">
-          <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-          <span>Sign out</span>
-        </a>
-    </ng-template>
+      <a class="card card-small" (click)="signOut()">
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        <span>Sign out</span>
+      </a>
+    } @else {
+      <a class="card card-small" (click)="signIn()">
+        <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></svg>
+        <span>Sign in</span>
+      </a>
+    }
   </div>
 </div>
 

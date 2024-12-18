@@ -21,10 +21,11 @@ describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
 
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ],
+      imports: [
+        ProfileComponent
+      ],
       providers: [
         { provide: OktaAuthStateService, useValue: authSpy }
       ]

@@ -1,31 +1,32 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { OktaAuthStateService, OKTA_AUTH } from '@okta/okta-angular';
-import { AuthState, OktaAuth } from '@okta/okta-auth-js';
-import { filter, map, Observable } from 'rxjs';
+import { AuthState } from '@okta/okta-auth-js';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
+  imports: [RouterOutlet, AsyncPipe, RouterLink],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  title = 'okta-angular-quickstart';
-  public isAuthenticated$!: Observable<boolean>;
+export class AppComponent {
+  private oktaStateService = inject(OktaAuthStateService);
+  private oktaAuth = inject(OKTA_AUTH);
 
-  constructor(private _oktaStateService: OktaAuthStateService, @Inject(OKTA_AUTH) private _oktaAuth: OktaAuth) { }
+  public title = 'okta-angular-quickstart';
 
-  public ngOnInit(): void {
-    this.isAuthenticated$ = this._oktaStateService.authState$.pipe(
-      filter((s: AuthState) => !!s),
-      map((s: AuthState) => s.isAuthenticated ?? false)
-    );
-  }
+  public isAuthenticated$ = this.oktaStateService.authState$.pipe(
+    filter((s: AuthState) => !!s),
+    map((s: AuthState) => s.isAuthenticated ?? false)
+  );
 
   public async signIn() : Promise<void> {
-    await this._oktaAuth.signInWithRedirect();
+    await this.oktaAuth.signInWithRedirect();
   }
 
   public async signOut(): Promise<void> {
-    await this._oktaAuth.signOut();
+    await this.oktaAuth.signOut();
   }
 }

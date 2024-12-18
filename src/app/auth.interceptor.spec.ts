@@ -1,10 +1,9 @@
 import { inject, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { OktaAuth } from '@okta/okta-auth-js';
 
-import { AuthInterceptor } from './auth.interceptor';
-import { HttpClient, HttpEvent, HttpHandler, HttpRequest, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { authInterceptor } from './auth.interceptor';
+import { HttpClient, HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { OKTA_AUTH } from '@okta/okta-angular';
 
 describe('AuthInterceptor', () => {
@@ -12,13 +11,15 @@ describe('AuthInterceptor', () => {
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
 
+  const interceptor: HttpInterceptorFn = (req, next) =>
+    TestBed.runInInjectionContext(() => authInterceptor(req, next));
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
-        AuthInterceptor,
-        { provide: OKTA_AUTH, useValue: authServiceSpy },
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+        provideHttpClient(withInterceptors([authInterceptor])),
+        provideHttpClientTesting(),
+        { provide: OKTA_AUTH, useValue: authServiceSpy }
       ]
     });
 
@@ -35,7 +36,6 @@ describe('AuthInterceptor', () => {
   }));
 
   it('should be created', () => {
-    const interceptor: AuthInterceptor = TestBed.inject(AuthInterceptor);
     expect(interceptor).toBeTruthy();
   });
 

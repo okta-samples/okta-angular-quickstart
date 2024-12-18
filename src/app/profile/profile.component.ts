@@ -1,32 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { OktaAuthStateService } from '@okta/okta-angular';
-import { filter, map, Observable } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AuthState } from '@okta/okta-auth-js';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
+  imports: [AsyncPipe],
   template: `
   <div class="profile-card">
     <div class="shield"></div>
-    <p>You're logged in!
-      <span *ngIf="name$ | async as name">
-        Welcome, {{name}}
-      </span>
+    <p>Welcome
+      @if(name$ | async; as name) {
+        <span>{{name}} </span>
+      }
     </p>
   </div>
   `,
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
+  private oktaAuthStateService = inject(OktaAuthStateService);
 
-  public name$!: Observable<string>;
-  constructor(private _oktaAuthStateService: OktaAuthStateService) { }
-
-  public ngOnInit(): void {
-    this.name$ = this._oktaAuthStateService.authState$.pipe(
-      filter((authState: AuthState) => !!authState && !!authState.isAuthenticated),
-      map((authState: AuthState) => authState.idToken?.claims.name ?? '')
-    );
-
-  }
+  public name$ = this.oktaAuthStateService.authState$.pipe(
+    filter((authState: AuthState) => !!authState && !!authState.isAuthenticated),
+    map((authState: AuthState) => authState.idToken?.claims.name ?? '')
+  );
 }
