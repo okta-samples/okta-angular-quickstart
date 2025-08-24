@@ -11,9 +11,46 @@ This code sample demonstrates
 * Displaying user profile information from the ID Token
 * Adding an interceptor for adding the Access Token to HTTP calls
 
-## Getting started
+## Prerequisites
 
-To run this example, run the following commands:
+Sign up for an [Integrator account](https://developer.okta.com/login). Once you have an account, sign in to your [Integrator account](https://developer.okta.com/login). Next, in the Admin Console:
+
+1. Go to **Applications > Applications**
+2. Click **Create App Integration**
+3. Select **OIDC - OpenID Connect** as the sign-in method
+4. Select **Single-Page Application** as the application type, then click **Next**
+5. Enter an app integration name (e.g. "My Angular SPA")
+6. In the **Grant type** section, ensure both **Authorization Code** and **Refresh Token** are selected
+7. Configure the redirect URIs:
+- **Sign-in redirect URIs:** `http://localhost:4200/login/callback`
+- **Sign-out redirect URIs:** `http://localhost:4200`
+8. In the **Controlled access** section, select the appropriate access level
+9. Click **Save**
+
+## Configure Okta resources
+
+**Verify Authorization Server**
+
+When using a custom authorization server, you need to set up authorization policies. Complete these additional steps:
+
+1. In the Admin Console, go to **Security > API > Authorization Servers**
+2. Select your custom authorization server (`default`)
+3. On the **Access Policies** tab, ensure you have at least one policy:
+  - If no policies exist, click **Add New Access Policy**
+  - Give it a name like “Default Policy”
+  - Set **Assign to** to “All clients”
+  - Click **Create Policy**
+4. For your policy, ensure you have at least one rule:
+  - Click **Add Rule** if no rules exist
+  - Give it a name like “Default Rule”
+  - Set **Grant type** is to “Authorization Code”
+  - Set **User** is to “Any user assigned the app”
+  - Set **Scopes requested** to “Any scopes”
+  - Click **Create Rule**
+
+For more details, see the [Custom Authorization Server documentation](https://developer.okta.com/docs/concepts/auth-servers/#custom-authorization-server).
+
+## Get the Code
 
 ```shell
 git clone https://github.com/okta-samples/okta-angular-quickstart.git
@@ -21,47 +58,26 @@ cd okta-angular-quickstart
 npm ci
 ```
 
-## Create an OIDC application in Okta
-
-Create a free developer account with the following command using the [Okta CLI](https://cli.okta.com/):
-
-```shell
-okta register
-```
-
-If you already have a developer account, use `okta login` to integrate it with the Okta CLI.
-
-Provide the required information. Once you register, create a client application in Okta with the following command:
-
-```shell
-okta apps create
-```
-
-You will be prompted to select the following options:
-* Type of Application: **2: SPA**
-* Redirect URI: `http://localhost:4200/login/callback`
-* Logout Redirect URI: `http://localhost:4200`
-
-The application configuration will be printed to your screen:
-
-```
-Okta application configuration:
-Issuer:    https://<OKTA_DOMAIN>.okta.com/oauth2/default
-Client ID: <CLIENT_ID>
-```
-
-Sign into your [Okta Developer Edition account](https://developer.okta.com/login/) to add a required setting to your SPA Okta app to avoid third-party cookies. Navigate to **Applications** > **Applications** and select "My SPA" application to edit. Find the **General Settings** and press **Edit**. Enable **Refresh Token** in the **Grant type** section. **Save** your changes.
-
 Update src/app.config.ts with your Okta settings.
 
 ```ts
 const oktaAuth = new OktaAuth({
-  clientId: '{yourClientID}',
-  issuer: 'https://{yourOktaDomain}',
+  clientId: '0oab8eb55Kb9jdMIr5d6',
+  issuer: 'https://integrator-1337.okta.com',
   redirectUri: window.location.origin + '/login/callback',
   scopes: ['openid', 'profile', 'offline_access']
 });
 ```
+
+### Where are my new app's credentials?
+
+Creating an OIDC Single-Page App manually in the Admin Console configures your Okta Org with the application settings. You may also need to configure trusted origins for `http://localhost:8080` in **Security > API > Trusted Origins**.
+
+After creating the app, you can find the configuration details on the app’s **General** tab:
+- **Client ID**: Found in the **Client Credentials** section
+- **Issuer**: Found in the **Issuer URI** field for the authorization server that appears by selecting **Security > API** from the navigation pane.
+
+## Run the Example
 
 Start the app by running
 
