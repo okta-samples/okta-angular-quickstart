@@ -1,13 +1,20 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { OktaAuth } from '@okta/okta-auth-js';
 
 import { authInterceptor } from './auth.interceptor';
 import { HttpClient, HttpInterceptorFn, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { OKTA_AUTH } from '@okta/okta-angular';
+import { vi } from 'vitest';
 
 describe('AuthInterceptor', () => {
-  const authServiceSpy = jasmine.createSpyObj<OktaAuth>(['getAccessToken']);
+  type AuthServiceMock = {
+    getAccessToken: ReturnType<typeof vi.fn<() => string | undefined>>;
+  };
+
+  const authServiceSpy = {
+    getAccessToken: vi.fn<() => string | undefined>().mockReturnValue('letMeIn')
+  } satisfies AuthServiceMock;
+
   let httpClient: HttpClient;
   let httpMock: HttpTestingController;
 
@@ -15,6 +22,9 @@ describe('AuthInterceptor', () => {
     TestBed.runInInjectionContext(() => authInterceptor(req, next));
 
   beforeEach(() => {
+    authServiceSpy.getAccessToken.mockReset();
+    authServiceSpy.getAccessToken.mockReturnValue('letMeIn');
+
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([authInterceptor])),
@@ -23,17 +33,13 @@ describe('AuthInterceptor', () => {
       ]
     });
 
-    authServiceSpy.getAccessToken.and.returnValue('letMeIn');
+    httpClient = TestBed.inject(HttpClient);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  beforeEach(inject([HttpClient, HttpTestingController], (http: HttpClient, httpTestController: HttpTestingController) => {
-    httpClient = http;
-    httpMock = httpTestController;
-  }));
-
-  afterEach(inject([HttpTestingController], (httpMock: HttpTestingController) => {
+  afterEach(() => {
     httpMock.verify();
-  }));
+  });
 
   it('should be created', () => {
     expect(interceptor).toBeTruthy();
@@ -42,22 +48,24 @@ describe('AuthInterceptor', () => {
   it('adds the Authorization header when url is in allowed list', () => {
     httpClient.get('http://localhost').subscribe({
       next: response => expect(response).toBeTruthy(),
-      error: err => fail(err)
+      error: err => {
+        throw err;
+      }
     });
 
     const req = httpMock.expectOne(r => r.headers.has('Authorization'));
     req.flush({hello: 'world'});
-    httpMock.verify();
   });
 
   it('skips the Authorization header when url is not in allowed list', () => {
     httpClient.get('https://okta.com').subscribe({
       next: response => expect(response).toBeTruthy(),
-      error: err => fail(err)
+      error: err => {
+        throw err;
+      }
     });
 
     const req = httpMock.expectOne(r => r.headers.get('Authorization') === null);
     req.flush({hello: 'world'});
-    httpMock.verify();
   });
 });

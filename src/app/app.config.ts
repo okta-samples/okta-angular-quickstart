@@ -1,11 +1,11 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth.interceptor';
-import { OktaAuthModule } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
+import { provideOktaAuth, withOktaConfig } from '@okta/okta-angular';
 
 const oktaAuth = new OktaAuth({
   issuer: 'https://{yourOktaDomain}',
@@ -16,10 +16,10 @@ const oktaAuth = new OktaAuth({
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    importProvidersFrom(
-      OktaAuthModule.forRoot({ oktaAuth })
+    provideOktaAuth(
+      withOktaConfig({ oktaAuth })
     ),
     provideHttpClient(withInterceptors([
       authInterceptor
