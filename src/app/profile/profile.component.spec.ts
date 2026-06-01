@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 
 describe('ProfileComponent', () => {
   const name = 'Awesome dev';
-  const authSpy = jasmine.createSpyObj('OktaAuthStateService', [], {
+  const authSpy = {
     authState$: of({
       isAuthenticated: true,
       idToken: {
@@ -16,7 +16,7 @@ describe('ProfileComponent', () => {
         }
       }
     })
-  });
+  };
 
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
@@ -31,9 +31,7 @@ describe('ProfileComponent', () => {
       ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -44,7 +42,7 @@ describe('ProfileComponent', () => {
   });
 
   it('should show a welcoming message with username', () => {
-    const message = fixture.debugElement.query(By.css('span')).nativeElement.innerText;
+    const message = fixture.debugElement.query(By.css('span')).nativeElement.textContent ?? '';
     expect(message).toContain(name);
   });
 });

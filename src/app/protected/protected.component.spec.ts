@@ -11,9 +11,7 @@ describe('ProtectedComponent', () => {
       imports: [ ProtectedComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ProtectedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
